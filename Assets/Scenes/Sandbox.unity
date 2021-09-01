@@ -914,6 +914,11 @@ PrefabInstance:
       propertyPath: _slowAmount
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 1899020920387920832, guid: cfbaf63b6f9429a468d0cdd5f49fbf86,
+        type: 3}
+      propertyPath: _impactSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 431142ab0b8229a48bd9b0ebf5ecaf7f, type: 3}
     - target: {fileID: 4526794185269353672, guid: cfbaf63b6f9429a468d0cdd5f49fbf86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1038,6 +1043,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3877014926911470407, guid: 1bebd960779e9624c81605ace9fe70fb,
+        type: 3}
+      propertyPath: _impactSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6c251405b483e404ebf8ccaed239d62e, type: 3}
     - target: {fileID: 3877014926911470456, guid: 1bebd960779e9624c81605ace9fe70fb,
         type: 3}
       propertyPath: m_Name
@@ -1117,6 +1127,11 @@ PrefabInstance:
       propertyPath: _speedAmount
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 5024621618844767421, guid: a93dc7e4c547fb2458a5231d5729cf67,
+        type: 3}
+      propertyPath: _collectSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d123e9f901ef22946891890a67dde382, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a93dc7e4c547fb2458a5231d5729cf67, type: 3}
 --- !u!1001 &5565437364905214605
@@ -1215,6 +1230,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Killer
       objectReference: {fileID: 0}
+    - target: {fileID: 6747171923378373329, guid: 4ce71d9b8333f2b4eb707388a43307aa,
+        type: 3}
+      propertyPath: _impactSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6c251405b483e404ebf8ccaed239d62e, type: 3}
     - target: {fileID: 6747171923378373334, guid: 4ce71d9b8333f2b4eb707388a43307aa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1279,6 +1299,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8009701409304532630, guid: ab482b0d46b8e1844a7b00b5d2785d56,
+        type: 3}
+      propertyPath: _collectSound
+      value: 
+      objectReference: {fileID: 8300000, guid: b47403986bdbf454da99e920a009c351, type: 3}
     - target: {fileID: 8009701409304532631, guid: ab482b0d46b8e1844a7b00b5d2785d56,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1408,5 +1433,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treasure
       objectReference: {fileID: 0}
+    - target: {fileID: 6360146131505041475, guid: 9c359fe16bdb6804f8141003d0e362e7,
+        type: 3}
+      propertyPath: _collectSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 4f7b39032dba73a45825d1f21bdb19ec, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c359fe16bdb6804f8141003d0e362e7, type: 3}
