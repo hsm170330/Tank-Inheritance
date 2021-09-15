@@ -61,6 +61,7 @@ public class CustomBullet : MonoBehaviour
 
     private void Delay()
     {
+        Debug.Log("explode");
         Destroy(gameObject);
     }
 

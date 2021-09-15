@@ -102,21 +102,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731624641315452495}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2073451cbd10e734da671a336b56de62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 731624641315452488}
-  explosion: {fileID: 0}
+  explosion: {fileID: 2113871853616354692, guid: ad0a26da7c2337f4da32022eec0c192b,
+    type: 3}
   whatIsEnemies:
     serializedVersion: 2
     m_Bits: 256
   bounciness: 0.79
-  useGravity: 0
+  useGravity: 1
   explosionDamage: 40
   explosionRange: 1
-  maxCollisions: 10
+  maxCollisions: 1
   maxLifetime: 4
   explodeOnTouch: 1
 --- !u!54 &731624641315452488

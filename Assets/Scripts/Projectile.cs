@@ -86,6 +86,7 @@ public class Projectile : MonoBehaviour
 
         // Add forces to bullet
         currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * shootForce, ForceMode.Impulse);
+        currentBullet.GetComponent<Rigidbody>().AddForce(attackPoint.up * upwardForce, ForceMode.Impulse);
 
         // Instantiate muzzle flash
         if (muzzleFlash != null)
@@ -109,7 +110,6 @@ public class Projectile : MonoBehaviour
             Invoke("shoot", timeBetweenShots);
         }
     }
-
     private void ResetShot()
     {
         readyToShoot = true;
