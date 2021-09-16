@@ -28,6 +28,9 @@ public class Projectile : MonoBehaviour
     public GameObject muzzleFlash;
     public TextMeshProUGUI ammunitionDisplay;
 
+    // audio
+    [SerializeField] AudioClip _shootSound;
+
     //bug fixing
     public bool allowInvoke = true;
 
@@ -92,6 +95,12 @@ public class Projectile : MonoBehaviour
         if (muzzleFlash != null)
         {
             Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+        }
+
+        // play audio
+        if (_shootSound != null)
+        {
+            AudioHelper.PlayClip2D(_shootSound, 1f);
         }
 
         bulletsLeft--;

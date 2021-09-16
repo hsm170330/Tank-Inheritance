@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Boss : MonoBehaviour
@@ -13,9 +14,33 @@ public class Boss : MonoBehaviour
 
     Rigidbody _rb;
 
+    public NavMeshAgent agent;
+
+    public Transform player;
+
+    public LayerMask whatIsGround, whatIsPlayer;
+
+    //Movement
+    public Vector3 walkPoint, spawnPoint;
+    bool LeftRight, X;
+
+    bool walkPointL, walkPointR, walkPoint1, walkPoint2, walkPoint3, walkPoint4, spawn;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        player = GameObject.Find("Tank").transform;
+        spawnPoint = transform.position;
+        agent = GetComponent<NavMeshAgent>();
+        LeftRight = true;
+        X = false;
+        walkPointL = true;
+        walkPointR = false;
+        walkPoint1 = false;
+        walkPoint2 = false;
+        walkPoint3 = false;
+        walkPoint4 = false;
+        spawn = false;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -63,13 +88,117 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        Move();
+        if (LeftRight)
+        {
+            LeftandRight();
+        }
+        else if (X)
+        {
+            XMove();
+        }
+        transform.LookAt(player);
     }
 
-    public void Move()
+    private void LeftandRight()
     {
-
+        if (walkPointL)
+        {
+            walkPoint = new Vector3(spawnPoint.x-8, spawnPoint.y, spawnPoint.z);
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                walkPointL = false;
+                walkPointR = true;
+                Debug.Log("Left");
+            }
+        }
+        else if (walkPointR)
+        {
+            walkPoint = new Vector3(spawnPoint.x + 8, spawnPoint.y, spawnPoint.z);
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                walkPointR = false;
+                Debug.Log("Right");
+            }
+        }
+        else
+        {
+            walkPoint = spawnPoint;
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                LeftRight = false;
+                X = true;
+                walkPoint1 = true;
+            }
+        }
+        agent.SetDestination(walkPoint);
+    }
+    private void XMove()
+    {
+        if (walkPoint1)
+        {
+            walkPoint = new Vector3(spawnPoint.x - 4, spawnPoint.y, spawnPoint.z - 4);
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                walkPoint1 = false;
+                walkPoint2 = true;
+            }
+        }
+        else if (walkPoint2)
+        {
+            walkPoint = new Vector3(spawnPoint.x + 4, spawnPoint.y, spawnPoint.z + 4);
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                walkPoint2 = false;
+                spawn = true;
+            }
+        }
+        else if (spawn)
+        {
+            walkPoint = spawnPoint;
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                spawn = false;
+                walkPoint3 = true;
+            }
+        }
+        else if (walkPoint3)
+        {
+            walkPoint = new Vector3(spawnPoint.x -4, spawnPoint.y, spawnPoint.z + 4);
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                walkPoint3 = false;
+                walkPoint4 = true;
+            }
+        }
+        else if (walkPoint4)
+        {
+            walkPoint = new Vector3(spawnPoint.x + 4, spawnPoint.y, spawnPoint.z - 4);
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                walkPoint4 = false;
+            }
+        }
+        else
+        {
+            walkPoint = spawnPoint;
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                X = false;
+                LeftRight = true;
+                walkPointL = true;
+            }
+        }
+        agent.SetDestination(walkPoint);
     }
 }
