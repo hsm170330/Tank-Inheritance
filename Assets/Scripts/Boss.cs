@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum GameState
+{
+    IdleShoot,
+    Charge,
+    SpawnBlocks
+}
 [RequireComponent(typeof(Rigidbody))]
 public class Boss : MonoBehaviour
 {
@@ -20,11 +26,18 @@ public class Boss : MonoBehaviour
 
     public LayerMask whatIsGround, whatIsPlayer;
 
+    private GameState _currentGameState = GameState.IdleShoot;
+
     //Movement
     public Vector3 walkPoint, spawnPoint;
     bool LeftRight, X;
 
     bool walkPointL, walkPointR, walkPoint1, walkPoint2, walkPoint3, walkPoint4, spawn;
+
+    //Shoot attack stuff
+    public Transform attackPoint;
+    public float shootforce;
+    public GameObject bullet;
 
     private void Awake()
     {
@@ -90,15 +103,32 @@ public class Boss : MonoBehaviour
 
     private void Update()
     {
-        if (LeftRight)
+        if (_currentGameState == GameState.IdleShoot)
         {
-            LeftandRight();
+            if (LeftRight)
+            {
+                LeftandRight();
+            }
+            else if (X)
+            {
+                XMove();
+            }
         }
-        else if (X)
+        else if (_currentGameState == GameState.Charge)
         {
-            XMove();
+            Charge();
+        }
+        else if (_currentGameState == GameState.SpawnBlocks)
+        {
+            SpawnBlocks();
         }
         transform.LookAt(player);
+
+        //shoot test
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            Shoot();
+        }
     }
 
     private void LeftandRight()
@@ -200,5 +230,30 @@ public class Boss : MonoBehaviour
             }
         }
         agent.SetDestination(walkPoint);
+    }
+
+    private void Charge()
+    {
+
+    }
+
+    private void SpawnBlocks()
+    {
+
+    }
+
+    private void Shoot()
+    {
+        //direction to fire
+        Vector3 direction = attackPoint.forward;
+
+        //Instantiate bullet
+        GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
+
+        //rotate bullet to proper direction
+        currentBullet.transform.forward = direction.normalized;
+
+        // add force to bullet
+        currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * shootforce, ForceMode.Impulse);
     }
 }

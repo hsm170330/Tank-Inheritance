@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(TankController))]
 public class Player : MonoBehaviour
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     int _treasureCount;
     public bool invincible = false;
     public TextMeshProUGUI treasureText;
+    public Slider slider;
 
     TankController _tankController;
 
@@ -22,6 +24,8 @@ public class Player : MonoBehaviour
     private void Start()
     {
         _currentHealth = _maxHealth;
+        slider.maxValue = _maxHealth;
+        slider.value = _maxHealth;
         _treasureCount = 0;
         SetTreasureText();
     }
@@ -29,6 +33,7 @@ public class Player : MonoBehaviour
     public void IncreaseHealth(int amount)
     {
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+        slider.value = _currentHealth;
         Debug.Log("Player's health: " + _currentHealth);
     }
 
@@ -37,6 +42,7 @@ public class Player : MonoBehaviour
         if (!invincible)
         {
             _currentHealth -= amount;
+            slider.value = _currentHealth;
             Debug.Log("Player's health: " + _currentHealth);
             if (_currentHealth <= 0)
             {

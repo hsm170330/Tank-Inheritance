@@ -114,12 +114,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _explosionSound: {fileID: 8300000, guid: e63fd72fa1055bf4fa79d608cec7e552, type: 3}
-  bounciness: 0.79
+  bounciness: 1
   useGravity: 1
+  exploding: 0
   explosionDamage: 40
   explosionRange: 1
   maxCollisions: 1
-  maxLifetime: 4
+  maxLifetime: 2
   explodeOnTouch: 1
 --- !u!54 &731624641315452488
 Rigidbody:
@@ -129,7 +130,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731624641315452495}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 1.8
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
