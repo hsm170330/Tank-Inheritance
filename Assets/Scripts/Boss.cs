@@ -17,6 +17,7 @@ public class Boss : MonoBehaviour
     [SerializeField] ParticleSystem _bossImpactParticles;
     [SerializeField] AudioClip _impactSound;
     bool cooldown = false;
+    bool spawningBlocks = false;
 
     Rigidbody _rb;
 
@@ -34,15 +35,28 @@ public class Boss : MonoBehaviour
 
     bool walkPointL, walkPointR, walkPoint1, walkPoint2, walkPoint3, walkPoint4, spawn;
 
+    bool atPlayer;
+
     //Shoot attack stuff
-    public Transform attackPoint;
+    public Transform[] attackPoints = new Transform[8];
+    public Transform attackPoint1, attackPoint2, attackPoint3, attackPoint4, attackPoint5, attackPoint6,
+        attackPoint7, attackPoint8;
+
     public float shootforce;
     public GameObject bullet;
+    public GameObject BossBlock;
+
+    public Material BossM;
+
+    private Vector3 rotation;
+
+    private Color original;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         player = GameObject.Find("Tank").transform;
+        rotation = transform.forward;
         spawnPoint = transform.position;
         agent = GetComponent<NavMeshAgent>();
         LeftRight = true;
@@ -54,6 +68,19 @@ public class Boss : MonoBehaviour
         walkPoint3 = false;
         walkPoint4 = false;
         spawn = false;
+        atPlayer = false;
+
+        attackPoints[0] = attackPoint1;
+        attackPoints[1] = attackPoint2;
+        attackPoints[2] = attackPoint3;
+        attackPoints[3] = attackPoint4;
+        attackPoints[4] = attackPoint5;
+        attackPoints[5] = attackPoint6;
+        attackPoints[6] = attackPoint7;
+        attackPoints[7] = attackPoint8;
+
+        original = BossM.GetColor("_Color");
+
     }
 
     private void OnCollisionEnter(Collision other)
@@ -120,9 +147,18 @@ public class Boss : MonoBehaviour
         }
         else if (_currentGameState == GameState.SpawnBlocks)
         {
-            SpawnBlocks();
+            if (!spawningBlocks)
+            {
+                SpawnBlockPositions();
+            }
+            else
+            {
+                BossM.SetColor("_Color", original);
+                Invoke("IdleStateChange", 5);
+            }
+
         }
-        transform.LookAt(player);
+        transform.forward = rotation;
 
         //shoot test
         if (Input.GetKeyUp(KeyCode.F))
@@ -142,6 +178,7 @@ public class Boss : MonoBehaviour
                 walkPointL = false;
                 walkPointR = true;
                 Debug.Log("Left");
+                Shoot();
             }
         }
         else if (walkPointR)
@@ -152,6 +189,7 @@ public class Boss : MonoBehaviour
             {
                 walkPointR = false;
                 Debug.Log("Right");
+                Shoot();
             }
         }
         else
@@ -163,6 +201,7 @@ public class Boss : MonoBehaviour
                 LeftRight = false;
                 X = true;
                 walkPoint1 = true;
+                Shoot();
             }
         }
         agent.SetDestination(walkPoint);
@@ -177,6 +216,7 @@ public class Boss : MonoBehaviour
             {
                 walkPoint1 = false;
                 walkPoint2 = true;
+                Shoot();
             }
         }
         else if (walkPoint2)
@@ -187,6 +227,7 @@ public class Boss : MonoBehaviour
             {
                 walkPoint2 = false;
                 spawn = true;
+                Shoot();
             }
         }
         else if (spawn)
@@ -197,6 +238,7 @@ public class Boss : MonoBehaviour
             {
                 spawn = false;
                 walkPoint3 = true;
+                Shoot();
             }
         }
         else if (walkPoint3)
@@ -207,6 +249,7 @@ public class Boss : MonoBehaviour
             {
                 walkPoint3 = false;
                 walkPoint4 = true;
+                Shoot();
             }
         }
         else if (walkPoint4)
@@ -216,6 +259,7 @@ public class Boss : MonoBehaviour
             if (distancetoWalkPoint.magnitude < 1f)
             {
                 walkPoint4 = false;
+                Shoot();
             }
         }
         else
@@ -225,8 +269,9 @@ public class Boss : MonoBehaviour
             if (distancetoWalkPoint.magnitude < 1f)
             {
                 X = false;
-                LeftRight = true;
-                walkPointL = true;
+                Shoot();
+                BossM.SetColor("_Color", new Color(220, 0, 0));
+                Invoke("ChargeStateChange", 5);
             }
         }
         agent.SetDestination(walkPoint);
@@ -234,26 +279,86 @@ public class Boss : MonoBehaviour
 
     private void Charge()
     {
-
+        if (!atPlayer)
+        {
+            Invoke("StopCharge", 10f);
+            Vector3 playerPosition = player.position;
+            walkPoint = playerPosition;
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 2f)
+            {
+                atPlayer = true;
+            }
+        }
+        else
+        {
+            walkPoint = spawnPoint;
+            Vector3 distancetoWalkPoint = transform.position - walkPoint;
+            if (distancetoWalkPoint.magnitude < 1f)
+            {
+                BossM.SetColor("_Color", new Color(255, 255, 255));
+                atPlayer = false;
+                spawningBlocks = false;
+                Invoke("BlockStateChange", 5);
+            }
+        }
+       
+        agent.SetDestination(walkPoint);
     }
 
-    private void SpawnBlocks()
+    private void StopCharge()
     {
+        atPlayer = true;
+    }
 
+    private void SpawnBlockPositions()
+    {
+        Debug.Log("Before for loop");
+        for (int i = 0; i < 5; i++)
+        {
+            BossBlock = Instantiate(BossBlock, new Vector3(Random.Range(-5, 5), 5, Random.Range(-5, 5)), Quaternion.identity);
+            BossBlock.SetActive(true);
+            Debug.Log("Block Spawned");
+        }
+        Debug.Log("After for loop");
+        spawningBlocks = true;
+    }
+    private void IdleStateChange()
+    {
+        
+        _currentGameState = GameState.IdleShoot;
+    }
+    private void ChargeStateChange()
+    {
+        Debug.Log("Changing Game State to Charge");
+        LeftRight = true;
+        walkPointL = true;
+        _currentGameState = GameState.Charge;
+    }
+    private void BlockStateChange()
+    {
+        _currentGameState = GameState.SpawnBlocks;
     }
 
     private void Shoot()
     {
         //direction to fire
-        Vector3 direction = attackPoint.forward;
+        Vector3[] direction = new Vector3[8];
+        GameObject[] currentBullet = new GameObject[8];
 
-        //Instantiate bullet
-        GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
+        for (int i = 0; i < attackPoints.Length; i++)
+        {
+            direction[i] = attackPoints[i].forward;
 
-        //rotate bullet to proper direction
-        currentBullet.transform.forward = direction.normalized;
-
-        // add force to bullet
-        currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * shootforce, ForceMode.Impulse);
+            //Instantiate bullet
+            currentBullet[i] = Instantiate(bullet, attackPoints[i].position, Quaternion.identity);
+            //rotate bullet to proper direction
+            currentBullet[i].transform.forward = direction[i].normalized;
+        }
+        for (int i = 0; i < attackPoints.Length; i++)
+        {
+            // add force to bullet
+            currentBullet[i].GetComponent<Rigidbody>().AddForce(direction[i].normalized * shootforce, ForceMode.Impulse);
+        }
     }
 }

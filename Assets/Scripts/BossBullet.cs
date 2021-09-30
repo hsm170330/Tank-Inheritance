@@ -14,6 +14,7 @@ public class BossBullet : MonoBehaviour
 
     //damage particles
     [SerializeField] ParticleSystem _impactParticles;
+    [SerializeField] AudioClip _impactSound;
 
     //Stats
     [Range(0f, 1f)]
@@ -102,8 +103,15 @@ public class BossBullet : MonoBehaviour
             Health health = collision.gameObject.GetComponent<Health>();
             health.TakeDamage(1);
             Instantiate(_impactParticles, collision.gameObject.transform.position, Quaternion.identity);
+            AudioHelper.PlayClip2D(_impactSound, 1f);
 
             Debug.Log("Hit");
+        }
+
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Debug.Log("Hit wall");
+            Destroy(gameObject);
         }
     }
     private void Setup()
